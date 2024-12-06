@@ -1,0 +1,35 @@
+name: Tests for upstream libgccjit cross-compilers
+
+permissions:
+  contents: write
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - { triple: "aarch64-unknown-linux-gnu", name: "aarch64" }
+          - { triple: "arm-unknown-linux-gnueabi", name: "arm" }
+          - { triple: "m68k-unknown-linux-gnu", name: "m68k" }
+          #- { triple: "sh-unknown-linux-gnu", name: "sh4" }
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download artifact
+        run: curl -LO https://github.com/cross-cg-gcc-tools/cross-gcc-upstream/releases/latest/download/gcc-${{matrix.arch.name}}-13.deb
+
+      - name: Install libgccjit
+        run: sudo dpkg -i gcc-${{matrix.arch.name}}-13.deb
+
+      - name: Run smoke test
+        run: |
+          gcc smoke_test.c -o libgccjit_smoke_test -lgccjit
+          ./libgccjit_smoke_test
