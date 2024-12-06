@@ -1,0 +1,3 @@
+= Tests for cross libgccjit compilers
+
+This fetches the cross-compilers built on https://github.com/cross-cg-gcc-tools/cross-gcc-upstream[this repo].
