@@ -6,6 +6,8 @@ permissions:
 on:
   push:
   pull_request:
+  repository_dispatch:
+    types: [run-tests]
 
 jobs:
   build:
